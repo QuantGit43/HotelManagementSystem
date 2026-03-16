@@ -1,0 +1,48 @@
+@model IEnumerable<HotelManagementSystem.Models.BookingDetail>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BdQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BdBk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BdSrv)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BdQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BdBk.BkId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BdSrv.SrvId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BdId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BdId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BdId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,76 @@
+@model HotelManagementSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Створити бронювання";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ClientName != null)
+{
+    <h1>Нове бронювання для клієнта: @ViewBag.ClientName</h1>
+}
+else if (ViewBag.RoomNumber != null)
+{
+    <h1>Бронювання кімнати № @ViewBag.RoomNumber</h1>
+}
+else
+{
+    <h1>Створити нове бронювання</h1>
+}
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="BkDateIn" class="control-label">Дата заїзду</label>
+                <input asp-for="BkDateIn" type="date" class="form-control" />
+                <span asp-validation-for="BkDateIn" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="BkDateOut" class="control-label">Дата виїзду</label>
+                <input asp-for="BkDateOut" type="date" class="form-control" />
+                <span asp-validation-for="BkDateOut" class="text-danger"></span>
+            </div>
+
+            @if (ViewBag.ClientId != null)
+            {
+                <input type="hidden" asp-for="BkClId" value="@ViewBag.ClientId" />
+            }
+            else
+            {
+                <div class="form-group mb-3">
+                    <label asp-for="BkClId" class="control-label">Оберіть клієнта</label>
+                    <select asp-for="BkClId" class ="form-control" asp-items="ViewBag.BkClId"></select>
+                </div>
+            }
+
+            @if (ViewBag.RoomId != null)
+            {
+                <input type="hidden" asp-for="BkRmId" value="@ViewBag.RoomId" />
+            }
+            else
+            {
+                <div class="form-group mb-3">
+                    <label asp-for="BkRmId" class="control-label">Оберіть кімнату</label>
+                    <select asp-for="BkRmId" class ="form-control" asp-items="ViewBag.BkRmId"></select>
+                </div>
+            }
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Створити" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">Повернутися до списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

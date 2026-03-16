@@ -1,0 +1,37 @@
+@model HotelManagementSystem.Models.BookingDetail
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>BookingDetail</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BdQuantity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BdQuantity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BdBk)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BdBk.BkId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BdSrv)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BdSrv.SrvId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.BdId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

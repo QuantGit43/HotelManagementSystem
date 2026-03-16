@@ -1,0 +1,45 @@
+@model HotelManagementSystem.Models.BookingDetail
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>BookingDetail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BdId" />
+            <div class="form-group">
+                <label asp-for="BdBkId" class="control-label"></label>
+                <select asp-for="BdBkId" class="form-control" asp-items="ViewBag.BdBkId"></select>
+                <span asp-validation-for="BdBkId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BdSrvId" class="control-label"></label>
+                <select asp-for="BdSrvId" class="form-control" asp-items="ViewBag.BdSrvId"></select>
+                <span asp-validation-for="BdSrvId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BdQuantity" class="control-label"></label>
+                <input asp-for="BdQuantity" class="form-control" />
+                <span asp-validation-for="BdQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
