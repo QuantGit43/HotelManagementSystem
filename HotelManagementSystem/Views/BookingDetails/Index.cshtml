@@ -1,48 +1,33 @@
 @model IEnumerable<HotelManagementSystem.Models.BookingDetail>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Деталі бронювання";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Послуги для бронювання №@ViewBag.BookingId</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-bookingId="@ViewBag.BookingId" class="btn btn-success">Додати послугу</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BdQuantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BdBk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BdSrv)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>Послуга</th>
+        <th>Кількість</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.BdSrv.SrvName)</td>
+            <td>@Html.DisplayFor(modelItem => item.BdQuantity) шт.</td>
             <td>
-                @Html.DisplayFor(modelItem => item.BdQuantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BdBk.BkId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BdSrv.SrvId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BdId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BdId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BdId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BdId" class="btn btn-sm btn-outline-warning">Редагувати</a> |
+                <a asp-action="Delete" asp-route-id="@item.BdId" class="btn btn-sm btn-outline-danger">Видалити</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

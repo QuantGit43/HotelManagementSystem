@@ -21,12 +21,10 @@ namespace HotelManagementSystem.Controllers
         // GET: BookingDetails
         public async Task<IActionResult> Index(int? bookingId)
         {
-            // Якщо зайшли просто так - повертаємо до всіх бронювань
             if (bookingId == null) return RedirectToAction("Index", "Bookings");
 
             ViewBag.BookingId = bookingId;
-
-            // Шукаємо послуги лише для цього конкретного бронювання
+            
             var hotelDbContext = _context.BookingDetails
                 .Where(b => b.BdBkId == bookingId)
                 .Include(b => b.BdBk)
@@ -39,8 +37,7 @@ namespace HotelManagementSystem.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
-    
-            // Перенаправляємо на список замовлених послуг для САМЕ ЦЬОГО бронювання
+            
             return RedirectToAction("Index", "BookingDetails", new { bookingId = id });
         }
 

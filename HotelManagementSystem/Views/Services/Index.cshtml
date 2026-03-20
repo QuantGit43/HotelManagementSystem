@@ -1,42 +1,34 @@
 @model IEnumerable<HotelManagementSystem.Models.Service>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Послуги";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Додаткові послуги</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Додати нову послугу</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SrvName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SrvPrice)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.SrvName)</th>
+        <th>@Html.DisplayNameFor(model => model.SrvPrice)</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.SrvName)</td>
+            <td>@Html.DisplayFor(modelItem => item.SrvPrice)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.SrvName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SrvPrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SrvId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SrvId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SrvId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.SrvId" class="btn btn-sm btn-outline-warning">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.SrvId" class="btn btn-sm btn-outline-info">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.SrvId" class="btn btn-sm btn-outline-danger">Видалити</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

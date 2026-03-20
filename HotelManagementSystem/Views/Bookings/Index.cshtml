@@ -1,54 +1,49 @@
 @model IEnumerable<HotelManagementSystem.Models.Booking>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Бронювання";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+@if (ViewBag.ClientName != null)
+{
+    <h1>Історія бронювань клієнта: @ViewBag.ClientName</h1>
+    <p><a asp-action="Create" asp-route-clientId="@ViewBag.ClientId" class="btn btn-primary">Додати бронювання</a></p>
+}
+else if (ViewBag.RoomNumber != null)
+{
+    <h1>Графік зайнятості кімнати № @ViewBag.RoomNumber</h1>
+    <p><a asp-action="Create" asp-route-roomId="@ViewBag.RoomId" class="btn btn-primary">Забронювати цю кімнату</a></p>
+}
+else
+{
+    <h1>Всі бронювання готелю</h1>
+    <p><a asp-action="Create" class="btn btn-primary">Створити нове бронювання</a></p>
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-hover mt-3">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BkDateIn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BkDateOut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BkCl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BkRm)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.BkDateIn)</th>
+        <th>@Html.DisplayNameFor(model => model.BkDateOut)</th>
+        <th>Клієнт</th>
+        <th>Кімната</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.BkDateIn)</td>
+            <td>@Html.DisplayFor(modelItem => item.BkDateOut)</td>
+            <td>@Html.DisplayFor(modelItem => item.BkCl.ClName)</td>
+            <td>@Html.DisplayFor(modelItem => item.BkRm.RmNumber)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.BkDateIn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BkDateOut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BkCl.ClId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BkRm.RmId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BkId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BkId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BkId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BkId" class="btn btn-sm btn-outline-warning">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.BkId" class="btn btn-sm btn-outline-info">Послуги</a> |
+                <a asp-action="Delete" asp-route-id="@item.BkId" class="btn btn-sm btn-outline-danger">Видалити</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

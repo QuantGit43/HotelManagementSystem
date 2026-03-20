@@ -19,24 +19,20 @@ namespace HotelManagementSystem.Controllers
         }
 
         // GET: Bookings
-        // Додаємо два необов'язкові параметри
         public async Task<IActionResult> Index(int? clientId, int? roomId)
         {
-            // Беремо всі бронювання
             var bookings = _context.Bookings
                 .Include(b => b.BkCl)
                 .Include(b => b.BkRm)
                 .AsQueryable();
-
-            // Якщо ми прийшли від конкретного Клієнта
+            
             if (clientId != null)
             {
                 bookings = bookings.Where(b => b.BkClId == clientId);
                 ViewBag.ClientId = clientId;
                 ViewBag.ClientName = _context.Clients.FirstOrDefault(c => c.ClId == clientId)?.ClName;
             }
-
-            // Якщо ми прийшли від конкретної Кімнати
+            
             if (roomId != null)
             {
                 bookings = bookings.Where(b => b.BkRmId == roomId);
@@ -46,8 +42,7 @@ namespace HotelManagementSystem.Controllers
 
             return View(await bookings.ToListAsync());
         }
-
-        // GET: Bookings/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -70,11 +65,9 @@ namespace HotelManagementSystem.Controllers
         // GET: Bookings/Create
         public IActionResult Create(int? clientId, int? roomId)
         {
-            // Передаємо ID у View, щоб знати, які поля ховати
             ViewBag.ClientId = clientId;
             ViewBag.RoomId = roomId;
-
-            // Дістаємо імена для гарних заголовків
+            
             if (clientId != null)
             {
                 ViewBag.ClientName = _context.Clients.FirstOrDefault(c => c.ClId == clientId)?.ClName;
@@ -83,8 +76,7 @@ namespace HotelManagementSystem.Controllers
             {
                 ViewBag.RoomNumber = _context.Rooms.FirstOrDefault(r => r.RmId == roomId)?.RmNumber;
             }
-
-            // Залишаємо списки (вони знадобляться, якщо поля не приховані)
+            
             ViewData["BkClId"] = new SelectList(_context.Clients, "ClId", "ClName");
             ViewData["BkRmId"] = new SelectList(_context.Rooms, "RmId", "RmNumber");
     
@@ -98,23 +90,36 @@ namespace HotelManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BkId,BkDateIn,BkDateOut,BkClId,BkRmId")] Booking booking)
         {
-            // Підтягуємо пов'язані об'єкти для валідації
             booking.BkCl = await _context.Clients.FindAsync(booking.BkClId);
             booking.BkRm = await _context.Rooms.FindAsync(booking.BkRmId);
 
             ModelState.Clear();
             TryValidateModel(booking);
+            
+            if (booking.BkDateOut <= booking.BkDateIn)
+            {
+                ModelState.AddModelError("BkDateOut", "Помилка: Дата виїзду має бути пізнішою за дату заїзду!");
+            }
+            
+            bool isRoomBusy = _context.Bookings.Any(b => 
+                b.BkRmId == booking.BkRmId && 
+                b.BkDateIn < booking.BkDateOut && 
+                b.BkDateOut > booking.BkDateIn);
 
+            if (isRoomBusy)
+            {
+                ModelState.AddModelError(string.Empty, "Увага! На ці дати кімната вже заброньована. Оберіть інші дати або кімнату.");
+            }
+            
             if (ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
         
-                // Після створення повертаємося до загального списку бронювань
+                if (booking.BkClId != null) return RedirectToAction("Index", new { clientId = booking.BkClId });
                 return RedirectToAction(nameof(Index));
             }
-    
-            // Якщо помилка (наприклад, не обрали дати)
+            
             ViewData["BkClId"] = new SelectList(_context.Clients, "ClId", "ClName", booking.BkClId);
             ViewData["BkRmId"] = new SelectList(_context.Rooms, "RmId", "RmNumber", booking.BkRmId);
             return View(booking);
@@ -145,9 +150,28 @@ namespace HotelManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BkId,BkDateIn,BkDateOut,BkClId,BkRmId")] Booking booking)
         {
-            if (id != booking.BkId)
+            if (id != booking.BkId) return NotFound();
+
+            booking.BkCl = await _context.Clients.FindAsync(booking.BkClId);
+            booking.BkRm = await _context.Rooms.FindAsync(booking.BkRmId);
+
+            ModelState.Clear();
+            TryValidateModel(booking);
+            
+            if (booking.BkDateOut <= booking.BkDateIn)
             {
-                return NotFound();
+                ModelState.AddModelError("BkDateOut", "Помилка: Дата виїзду має бути пізнішою за дату заїзду!");
+            }
+            
+            bool isRoomBusy = _context.Bookings.Any(b => 
+                b.BkId != booking.BkId &&
+                b.BkRmId == booking.BkRmId && 
+                b.BkDateIn < booking.BkDateOut && 
+                b.BkDateOut > booking.BkDateIn);
+
+            if (isRoomBusy)
+            {
+                ModelState.AddModelError(string.Empty, "Неможливо змінити! На ці дати кімната вже зайнята кимось іншим.");
             }
 
             if (ModelState.IsValid)
@@ -159,19 +183,14 @@ namespace HotelManagementSystem.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookingExists(booking.BkId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!BookingExists(booking.BkId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BkClId"] = new SelectList(_context.Clients, "ClId", "ClId", booking.BkClId);
-            ViewData["BkRmId"] = new SelectList(_context.Rooms, "RmId", "RmId", booking.BkRmId);
+    
+            ViewData["BkClId"] = new SelectList(_context.Clients, "ClId", "ClName", booking.BkClId);
+            ViewData["BkRmId"] = new SelectList(_context.Rooms, "RmId", "RmNumber", booking.BkRmId);
             return View(booking);
         }
 

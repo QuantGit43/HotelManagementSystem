@@ -1,48 +1,36 @@
 @model IEnumerable<HotelManagementSystem.Models.Hotel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Готелі";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Довідник готелів</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Додати новий готель</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.HtName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HtAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HtStars)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.HtName)</th>
+        <th>@Html.DisplayNameFor(model => model.HtAddress)</th>
+        <th>@Html.DisplayNameFor(model => model.HtStars)</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.HtName)</td>
+            <td>@Html.DisplayFor(modelItem => item.HtAddress)</td>
+            <td>@Html.DisplayFor(modelItem => item.HtStars)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.HtName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HtAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HtStars)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.HtId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.HtId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.HtId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.HtId" class="btn btn-sm btn-outline-warning">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.HtId" class="btn btn-sm btn-outline-info">Кімнати</a> |
+                <a asp-action="Delete" asp-route-id="@item.HtId" class="btn btn-sm btn-outline-danger">Видалити</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

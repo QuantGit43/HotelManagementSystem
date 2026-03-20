@@ -10,37 +10,25 @@
 <p>
     <a asp-action="Create" asp-route-hotelId="@ViewBag.HotelId" class="btn btn-primary">Додати нову кімнату</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.RmNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RmCat)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RmHt)
-        </th>
+        <th>@Html.DisplayNameFor(model => model.RmNumber)</th>
+        <th>@Html.DisplayNameFor(model => model.RmCat)</th>
+        <th>@Html.DisplayNameFor(model => model.RmHt)</th>
         <th></th>
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model) {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.RmNumber)</td>
+            <td>@Html.DisplayFor(modelItem => item.RmCat.CatName)</td>
+            <td>@Html.DisplayFor(modelItem => item.RmHt.HtName)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.RmNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RmCat.CatName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RmHt.HtName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RmId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RmId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RmId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.RmId" class="btn btn-sm btn-outline-warning">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.RmId" class="btn btn-sm btn-outline-info">Бронювання</a> |
+                <a asp-action="Delete" asp-route-id="@item.RmId" class="btn btn-sm btn-outline-danger">Видалити</a>
             </td>
         </tr>
     }
